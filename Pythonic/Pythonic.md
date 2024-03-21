@@ -208,7 +208,83 @@ ProjectName/
 
 **建议28** 格式化字符串时尽量使用 .format 方式而不是 %
 
+**建议31** 函数传参既不是传值也不是传引用，可变对象传引用、不可变对象传值，也是不准确的。python的参数传递机制到底是怎么样的，首先理解 python 中的赋值和我们理解的 赋值并不一样。"a=5,b=a,b=7"
 
+- c++ 的 b = a 是将内存申请一块并将a的值赋值到内存中，执行 b=7则是将b对应的值从5修改到7
+- 但是在 python 中 b=a 操作会使得b和a引用同一个对象
+- 最终回答是：既不是传值也不是传引用。正确的说法是传对象或者传对象的引用。传入参数的过程中将整个对象传入，对可变对象的修改在函数外部以及内部都可以见，调用者和被调用者之间共享对象；不可变对象，不能被真正修改，因此都是通过生成新的对象然后来赋值实现的
+
+**建议32** 警惕默认参数潜在的问题
+
+~~~python
+def appendtest(newitem, lista = []):
+  print(id(lista))
+  lista.append(newitem)
+  print(id(lista))
+  return lista
+
+appendtest('a')
+appendtest('a')
+
+~~~
+
+最终会输出 ['a', 'a']，这是因为解释器执行 def 的时候，默认参数也会被计算，并存在函数的 .func\_defaults 属性中。由于python中函数参数传递的是对象，可变对象在调用者和被调用者之间共享，所以会出现以上bug
+
+**建议33** 慎用变长参数，python支持可变长度的参数列表，可以通过在函数定义的时候使用 *args 和 **kwargs 这两个特殊语法来实现
+
+~~~python
+def set_axis(x, y, xlabel='x', ylabel='y', *args, **kwargs):
+	pass
+	
+set_axis(2, 3, "test", "test2", "test3", my_kwargs="test3")
+set_axis(2, 3, my_kwarg="test3")
+set_axis(3, 3, "test1", my_kwargs="test3")
+set_axis("test1", "test2", xlabel="new_x", ylabel="new_y", my_kwarg="test3")
+set_axis(2, "test1", "test2", ylabel="new_y", my_kwarg="test3")
+~~~
+
+以上所有调用都是合法的！首先满足普通参数，然后默认参数。使用可变长度参数，使用过于灵活。以下情况下使用：
+
+- 实现函数多台或者在继承情况下子类调用父类的某些方法
+- 如果参数数目不确定，读取一些配置文件中的值进行全局变量初始化
+- 为函数添加一个装饰器
+
+**建议34** 深入理解 str 和 repr 的区别
+
+- 都是将 python 中的对象转换为字符串
+- 解释其中直接输入 a 调用 repr 参数，print 调用 str 函数
+- str主要面向用户，目的是可读性；repr 面向的是python解释器、开发人员，常作为debug用途
+- 一般来说类内都应该定义 \__repr\_\_ 方法，用户实现时候最好保证其返回值可以用 eval 还原
+
+**建议35** 分清 staticmethod 和 classmethod 的适用场景
+
+**建议38** 使用 copy 模块深拷贝对象
+
+**建议39** 使用 counter 进行计数统计，除了遍历一边set、list这种iterator类型的，还有没有更佳 pythonic 的做法？使用 Counter 类，他是属于字典类的子类，是一个容器对象，主要用来统计散列对象，支持运算符操作。
+
+ ~~~python
+ from collections import Counter
+ some_data = ['a', '2', 2, 4, 5, '2', 'a', 'b', 'a']
+ print(Counter(some_data))
+ ~~~
+
+**建议40** 深入掌握 ConfigParser，配置文件的意义在于用户不需要修改代码就可以改变应用程序的行为，python 有一个标准库来支持，也就是 ConfigParser
+
+**建议41** 使用 argparse 处理命令行参数，除此之外标准库中留下的 getopt、optparse 和 argparse 就是证明。其中 getopt 是类似
+
+
+
+| type               | Aix_fORGE             | mh                    |
+| ------------------ | --------------------- | --------------------- |
+| 数据类型           | Feather               | 自定义的 npcbuf       |
+| 可解释性模块       | AIx_forge_Interpreter | /                     |
+| 多机多卡分布式训练 | /                     | /                     |
+| 模型接口           | DL + Tree             | Only DL               |
+| 数据采用           | Graph（进化版） + Seq | Graph（普通版） + Seq |
+| 数据分析           | AIx_forge_Analyzer    | /（需要自己实现）     |
+|                    |                       |                       |
+|                    |                       |                       |
+|                    |                       |                       |
 
 
 
