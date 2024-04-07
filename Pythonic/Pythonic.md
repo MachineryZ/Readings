@@ -270,7 +270,26 @@ set_axis(2, "test1", "test2", ylabel="new_y", my_kwarg="test3")
 
 **建议40** 深入掌握 ConfigParser，配置文件的意义在于用户不需要修改代码就可以改变应用程序的行为，python 有一个标准库来支持，也就是 ConfigParser
 
-**建议41** 使用 argparse 处理命令行参数，除此之外标准库中留下的 getopt、optparse 和 argparse 就是证明。其中 getopt 是类似
+**建议41** 使用 argparse 处理命令行参数，除此之外标准库中留下的 getopt、optparse 和 argparse 就是证明。其中 getopt 是类似的库。（docopt是比 argparse更先进更易用的命令行参数处理器）
+
+**建议42** 使用 pandas 处理大型 csv 文件（comma separated values）
+
+**建议44** 理解模块 pickle 优劣。序列化场景很常见，pickle 是最通用的序列化模块，（C语言实现的 cPickle，相比 pickle 来说具有较好的性能，其速度大概是 pickle 的 1000 倍，因此在大多数应用程序中应该优先使用 cPickle）
+
+- pickle.dump，序列化一个数据到文件描述符。参数obj表示需要序列化的对象，包括bool，数字，
+- pickle.load
+
+**建议50** 利用模块实现单例模式
+
+**建议51** 用 mixin 模式让程序更加灵活
+
+**建议52** 用发布订阅模式实现松耦合 publish/subscribe 模式。
+
+**建议54** 理解 builtin object，python中一切皆是对象，字符是对象，列表是对象，内建类型 builtin type也是对象。
+
+**建议55** init 不是构造方法，new才是，init只是在类对象创建好之后进行变量的初始化
+
+
 
 
 
